@@ -49,7 +49,7 @@ Ink.createModule('Ink.UI.Gallery', '1',
 
 
     /**
-     * @class Ink.UI.Gallery
+     * 
      *
      * The selector is expected to point at a DOM element with the class `ink-galleryx`
      * Gallery tries to identify special classes and give them behaviour.
@@ -78,6 +78,8 @@ Ink.createModule('Ink.UI.Gallery', '1',
      * - different thumbnail placements (nice to have)
      * - vertical mode (nice to have)
      * - transitions (nice to have)
+     * 
+     * @class Ink.UI.Gallery
      *
      * @constructor
      * @param  {String|DOMElement} selector
@@ -537,7 +539,7 @@ Ink.createModule('Ink.UI.Gallery', '1',
                 s.height = 'auto';
                 s.paddingTop = 0;
                 h = this._prevEl.offsetHeight;
-                console.log(mainDims[1], h, (mainDims[1] - h) / 2 );
+                //console.log(mainDims[1], h, (mainDims[1] - h) / 2 );
                 s.paddingTop = ~~( (mainDims[1] - h) / 2 ) + 'px';
                 s.height = mainDims[1] + 'px';
             }
@@ -546,7 +548,7 @@ Ink.createModule('Ink.UI.Gallery', '1',
                 s.height = 'auto';
                 s.paddingTop = 0;
                 h = this._nextEl.offsetHeight;
-                console.log(mainDims[1], h, (mainDims[1] - h) / 2 );
+                //console.log(mainDims[1], h, (mainDims[1] - h) / 2 );
                 s.paddingTop = ~~( (mainDims[1] - h) / 2 ) + 'px';
                 s.height = mainDims[1] + 'px';
             }
