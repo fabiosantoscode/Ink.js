@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+        <title>ImageCell</title>
+
+        <meta name="description" content="">
+        <meta name="author" content="ink, cookbook, recipes">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+        <link rel="stylesheet" type="text/css" href="http://cdn.ink.sapo.pt/2.1.1/css/ink-min.css" type="text/css" media="screen" charset="utf-8">
+
+        <!--[if lte IE 7 ]>
+            <link rel="stylesheet" href="http://cdn.ink.sapo.pt/2.1.1/css/ink-ie7-min.css" type="text/css" media="screen" charset="utf-8">
+        <![endif]-->
+
+        <link rel="stylesheet" href="imageCell.css" type="text/css" media="screen" charset="utf-8">
+
+        <script type="text/javascript">
+            window.INK_PATH = location.protocol + '//' + location.host + '/Ink/';
+        </script>
+
+        <script type="text/javascript" src="/Ink/1/lib.js"></script>
+
+    </head>
+
+    <body>
+        <div class="ink-grid">
+            <header>
+                <h1 class="large-100 medium-100 small-100">
+                    ImageCell
+                </h1>
+            </header>
+
+            <form action="#" class="ink-form" onsubmit="return false;">
+                <fieldset class="column-group gutters">
+                    <div class="control-group large-25">
+                        <label for="cellSize">cell size:</label>
+
+                        <div class="control">
+                            <select id="cellSize">
+                                <option selected>256 256</option>
+                                <option>320 240</option>
+                                <option>240 320</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="control-group large-25">
+                        <label for="css3">use CSS3?</label>
+
+                        <div class="control">
+                            <input type="checkbox" id="css3">
+                        </div>
+                    </div>
+                    <div class="control-group large-25">
+                        <label for="modeCover">mode:</label>
+
+                        <ul class="control unstyled">
+                            <li>
+                                <input type="radio" name="mode" id="modeCover" value="cover" checked>
+                                <label for="modeCover">cover</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="mode" id="modeContain" value="contain">
+                                <label for="modeContain">contain</label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="control-group large-25">
+                        <button id="apply" class="ink-button">apply</button>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+
+        <div style="margin: 100px 0 0 100px" id="cells"></div>
+
+        <script type="text/javascript" src="sample.js"></script>
+    </body>
+</html>
