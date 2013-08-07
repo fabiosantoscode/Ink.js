@@ -7,6 +7,8 @@ Ink.createModule('Ink.Util.Array', '1', [], function() {
 
     'use strict';
 
+    var arrayProto = Array.prototype;
+
     /**
      * Utility functions to use with Arrays
      *
@@ -185,6 +187,56 @@ Ink.createModule('Ink.Util.Array', '1', [], function() {
             } while(--iterations > 0);
 
             return arr;
+        },
+
+        /**
+         * Run a `map` function for each item in the array. The function will receive each item as argument and its return value will change the corresponding array item.
+         * @method map
+         * @param {Array} array     The array to map over
+         * @param {Function} map    The map function. Will take `(item, index, array)` and `this` will be the `context` argument.
+         * @param {Object} [context]    Object to be `this` in the map function.
+         *
+         * @example
+         *      InkArray.map([1, 2, 3, 4], function (item) {
+         *          return item + 1;
+         *      }); // -> [2, 3, 4, 5]
+         */
+        map: function (array, callback, context) {
+            if (Array.prototype.map) {
+                return Array.prototype.map.call(array, callback, context);
+            }
+            var mapped = new Array(len);
+            for (var i = 0, len = array.length >>> 0; i < len; i++) {
+                mapped[i] = callback.call(context, array[i], i, array);
+            }
+            return mapped;
+        },
+
+        /**
+         * Run a test function through all the input array. Items which pass the test function (for which the test function returned `true`) are kept in the array. Other items are removed.
+         * @param {Array} array
+         * @param {Function} test       A test function taking `(item, index, array)`
+         * @param {Object} [context]    Object to be `this` in the test function.
+         * @return filtered array
+         *
+         * @example
+         *      InkArray.filter([1, 2, 3, 4, 5], function (val) {
+         *          return val > 2;
+         *      })  // -> [3, 4, 5]
+         */
+        filter: function (array, test, context) {
+            if (Array.prototype.filter) {
+                return Array.prototype.filter.call(array, test, context);
+            }
+            var filtered = [],
+                val = null;
+            for (var i = 0, len = array.length; i < len; i++) {
+                val = array[i]; // it might be mutated
+                if (test.call(context, val, i, array)) {
+                    filtered.push(val);
+                }
+            }
+            return filtered;
         },
 
         /**
@@ -377,43 +429,4 @@ if (!Array.prototype.forEach) {
         }
     };
 }
-
-
-// Production steps of ECMA-262, Edition 5, 15.4.4.19
-// Reference: http://es5.github.com/#x15.4.4.19
-// https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/map
-if (!Array.prototype.map) {
-    Array.prototype.map = function(callback, thisArg) {
-        var T, A, k;
-
-        if (this === null || this === undefined) {
-            new TypeError(" this is null or not defined");
-        }
-
-        var O = Object(this);
-        var len = O.length >>> 0;
-
-        if ({}.toString.call(callback) !== "[object Function]") {
-            throw new TypeError(callback + " is not a function");
-        }
-
-        if (thisArg) {
-            T = thisArg;
-        }
-        A = new Array(len);
-        k = 0;
-
-        while(k < len) {
-            var kValue, mappedValue;
-            if (k in O) {
-                kValue = O[ k ];
-                mappedValue = callback.call(T, kValue, k, O);
-                A[ k ] = mappedValue;
-            }
-            ++k;
-        }
-        return A;
-    };
-}
-
 */
