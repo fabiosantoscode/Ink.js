@@ -11,11 +11,11 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
      * @example
      */
 
-    var isTruthy = function (val) {return !!val};
+    var isTruthy = function (val) {return !!val;};
 
     function TagField(element, options) {
         this.init(element, options);
-    };
+    }
 
     TagField.prototype = {
         /**
@@ -91,7 +91,7 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
             } else if (tagname === 'select') {
                 element.innerHTML = '';
                 InkArray.each(tags, Ink.bind(function (tag) {
-                    var opt = InkElement.create('option', {selected: 'selected'})
+                    var opt = InkElement.create('option', {selected: 'selected'});
                     InkElement.setTextContent(opt, tag);
                     element.appendChild(opt);
                 }, this));
@@ -132,7 +132,7 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
             }
         },
 
-        _onKeyUp: function (event) {
+        _onKeyUp: function () {
             if (!this._options.autoSplit) {
                 return;
             }
@@ -140,7 +140,7 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
             if (split.length <= 1) {
                 return;
             }
-            last = split[split.length - 1]
+            var last = split[split.length - 1];
             split = split.splice(0, split.length - 1);
             split = InkArray.filter(split, isTruthy);
             
@@ -157,22 +157,39 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
                 return false;
             } else if (event.which === 8 && !this._input.value) { // backspace key // TODO TEST
                 if (this._removeConfirm) {
+                    this._unsetRemovingVisual(this._tags.length - 1);
                     this._removeTag(this._tags.length - 1);
-                    this._removeConfirm = false;
+                    this._removeConfirm = null;
                 } else {
-                    var lastTagElm = this._viewElm.children[this._tags.length - 1];
-                    Css.removeClassName(lastTagElm, 'info');
-                    Css.addClassName(lastTagElm, 'warning');
-                    this._removeConfirm = true;
+                    this._setRemovingVisual(this._tags.length - 1);
                 }
             } else {
                 if (this._removeConfirm) {  // pressed another key, cancelling removal
-                    this._removeConfirm = null;
-                    Css.removeClassName(this._viewElm.children[this._tags.length - 1], 'warning');
-                    Css.addClassName(this._viewElm.children[this._tags.length - 1], 'info');
+                    this._unsetRemovingVisual(this._tags.length - 1);
                 }
-                
             }
+        },
+
+        /* For when the user presses backspace.
+         * Set the style of the tag so that it seems like it's going to be removed
+         * if they press backspace again. */
+        _setRemovingVisual: function (tagIndex) {
+            var elm = this._viewElm.children[tagIndex];
+            Css.removeClassName(elm, 'info');
+            Css.addClassName(elm, 'warning');
+
+            this._removeRemovingVisualTimeout = setTimeout(Ink.bind(this._unsetRemovingVisual, this, tagIndex), 4000);
+            InkEvent.observe(this._input, 'blur', Ink.bind(this._unsetRemovingVisual, this, tagIndex));
+            this._removeConfirm = true;
+        },
+        _unsetRemovingVisual: function (tagIndex) {
+            var elm = this._viewElm.children[tagIndex];
+            if (elm) {
+                Css.addClassName(elm, 'info');
+                Css.removeClassName(elm, 'warning');
+                clearTimeout(this._removeRemovingVisualTimeout);
+            }
+            this._removeConfirm = null;
         },
 
         _removeTag: function (event) {
