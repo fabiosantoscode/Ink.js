@@ -51,6 +51,7 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
             var tags = [].concat(o.tags, this._tagsFromMarkup(this._element));
             InkArray.each(tags, Ink.bind(this._addTag, this));
             this._input = InkElement.create('input', {type: 'text'});
+            Css.addClassName(this._input, 'new-tag-input');
             viewElm.appendChild(this._input);
             InkElement.insertAfter(viewElm, this._element);
 
@@ -58,10 +59,6 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
             InkEvent.observe(this._input, 'change', Ink.bindEvent(this._onKeyUp, this));
             InkEvent.observe(this._input, 'keydown', Ink.bindEvent(this._onKeyDown, this));
             InkEvent.observe(this._viewElm, 'click', Ink.bindEvent(this._refocus, this));
-        },
-
-        _makeInput: function () {
-            
         },
 
         destroy: function () {
@@ -112,6 +109,7 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
             InkElement.setTextContent(elm, tag + ' ');
 
             var remove = InkElement.create('i');
+            Css.addClassName(remove, 'remove');
             Css.addClassName(remove, 'icon-remove');
             InkEvent.observe(remove, 'click', Ink.bindEvent(this._removeTag, this, null));
             elm.appendChild(remove);
@@ -132,7 +130,7 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
             }
         },
 
-        _onKeyUp: function () {
+        _onKeyUp: function () {  // TODO control input box size
             if (!this._options.autoSplit) {
                 return;
             }
@@ -155,7 +153,7 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
                 this._input.value = '';
                 InkEvent.stop(event);
                 return false;
-            } else if (event.which === 8 && !this._input.value) { // backspace key // TODO TEST
+            } else if (event.which === 8 && !this._input.value) { // backspace key
                 if (this._removeConfirm) {
                     this._unsetRemovingVisual(this._tags.length - 1);
                     this._removeTag(this._tags.length - 1);
