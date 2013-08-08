@@ -183,9 +183,10 @@ Ink.requireModules(['Ink.UI.TagField_1', 'Ink.Dom.Element_1', 'Ink.Dom.Selector_
         tf.destroy();
     });
 
-    tfTest('you can remove the last tag you typed using backspace', {
+    tfTest('you can remove the last tag you typed by typing backspace twice', {
         tags: 'tag1 tag2'
     }, function (tf) {
+        tf._onKeyDown({which: 8});
         tf._onKeyDown({which: 8});
         equal(tf._element.value, 'tag1');
         deepEqual(tf._tags, ['tag1']);

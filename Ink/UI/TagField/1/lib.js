@@ -32,7 +32,6 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
                 tags: [],
                 tagQuery: null,
                 tagQueryAsync: null,
-                removeHtml: '&times;',
                 allowRepeated: false,
                 outSeparator: ',',
                 separator: /[,; ]+/g,
@@ -108,16 +107,20 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
             }
             var elm = InkElement.create('span');
             Css.addClassName(elm, 'tag');
-            InkElement.setTextContent(elm, tag);
+            Css.addClassName(elm, 'ink-label');
+            Css.addClassName(elm, 'info');
+            InkElement.setTextContent(elm, tag + ' ');
 
-            var remove = InkElement.create('span');
-            Css.addClassName(remove, 'remove');
-            remove.innerHTML = this._options.removeHtml;
+            var remove = InkElement.create('i');
+            Css.addClassName(remove, 'icon-remove');
             InkEvent.observe(remove, 'click', Ink.bindEvent(this._removeTag, this, null));
             elm.appendChild(remove);
 
+            var spc = document.createTextNode(' ');
+
             this._tags.push(tag);
             this._viewElm.insertBefore(elm, this._input);
+            this._viewElm.insertBefore(spc, this._input);
             this._tagsToMarkup(this._tags, this._element);
         },
 
@@ -146,13 +149,29 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
         },
 
         _onKeyDown: function (event) {
+
             if (event.which === 13 && this._input.value) {  // enter key
                 this._addTag(this._input.value);
                 this._input.value = '';
                 InkEvent.stop(event);
                 return false;
             } else if (event.which === 8 && !this._input.value) { // backspace key // TODO TEST
-                this._removeTag(this._tags.length - 1);
+                if (this._removeConfirm) {
+                    this._removeTag(this._tags.length - 1);
+                    this._removeConfirm = false;
+                } else {
+                    var lastTagElm = this._viewElm.children[this._tags.length - 1];
+                    Css.removeClassName(lastTagElm, 'info');
+                    Css.addClassName(lastTagElm, 'warning');
+                    this._removeConfirm = true;
+                }
+            } else {
+                if (this._removeConfirm) {  // pressed another key, cancelling removal
+                    this._removeConfirm = null;
+                    Css.removeClassName(this._viewElm.children[this._tags.length - 1], 'warning');
+                    Css.addClassName(this._viewElm.children[this._tags.length - 1], 'info');
+                }
+                
             }
         },
 
