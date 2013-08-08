@@ -80,16 +80,16 @@ Ink.requireModules(['Ink.UI.TagField_1', 'Ink.Dom.Element_1', 'Ink.Dom.Selector_
         var select = Ink.bind(Selector.select, Selector, '>.tag', view);
         equal(select().length, 0);
         tagField._onKeyUp();
-        equal(select().length, 2);
+        equal(select().length, 2);  // not tag3, because the user might not have finished typing it.
     });
 
     test('has necessary tags when starting out', function () {
-        var tf1 = new TagField(create('input', {value: 'asd, asd,  ,'}));
+        var tf1 = new TagField(create('input', {value: 'asd1, asd2,  ,'}));
         var tf2 = new TagField(create('input'), {tags: ['lolcats', 'famous peepz']});
-        var tf3 = new TagField(create('input', {value: 'asd, asd,  ,'}), {tags: ['lolcats', 'famous peepz']});
-        deepEqual(tf1._tags, ['asd', 'asd']);
+        var tf3 = new TagField(create('input', {value: 'asd1, asd2,  ,'}), {tags: ['lolcats', 'famous peepz']});
+        deepEqual(tf1._tags, ['asd1', 'asd2']);
         deepEqual(tf2._tags, ['lolcats', 'famous peepz']);
-        deepEqual(tf3._tags, ['lolcats', 'famous peepz', 'asd', 'asd']);
+        deepEqual(tf3._tags, ['lolcats', 'famous peepz', 'asd1', 'asd2']);
         tf1.destroy(); tf2.destroy(); tf3.destroy();
         clear();
     });
@@ -166,6 +166,7 @@ Ink.requireModules(['Ink.UI.TagField_1', 'Ink.Dom.Element_1', 'Ink.Dom.Selector_
         tf._onKeyUp();
         equal(tf._element.value, 'asd,basd');
     });
+
     test('Keep underlying select multi updated', function () {
         var multi = create('select', {multiple: true});
         var child = create('option', {}, multi);
@@ -180,5 +181,16 @@ Ink.requireModules(['Ink.UI.TagField_1', 'Ink.Dom.Element_1', 'Ink.Dom.Selector_
         equal(Selector.select('>option:checked', multi).length, 3);
         clear();
         tf.destroy();
+    });
+
+    tfTest('you can remove the last tag you typed using backspace', {
+        tags: 'tag1 tag2'
+    }, function (tf) {
+        tf._onKeyDown({which: 8});
+        equal(tf._element.value, 'tag1');
+        deepEqual(tf._tags, ['tag1']);
+        equal(tf._viewElm.children.length, 2);
+        ok(Selector.select(
+            ':contains(tag1) + input').length);
     });
 });

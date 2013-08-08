@@ -33,7 +33,7 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
                 tagQuery: null,
                 tagQueryAsync: null,
                 removeHtml: '&times;',
-                allowRepeated: true,
+                allowRepeated: false,
                 outSeparator: ',',
                 separator: /[,; ]+/g,
                 autoSplit: true
@@ -107,13 +107,15 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
                 return false;
             }
             var elm = InkElement.create('span');
-            var remove = InkElement.create('span');
             Css.addClassName(elm, 'tag');
             InkElement.setTextContent(elm, tag);
+
+            var remove = InkElement.create('span');
             Css.addClassName(remove, 'remove');
             remove.innerHTML = this._options.removeHtml;
-            InkEvent.observe(remove, 'click', Ink.bindEvent(this._removeTag, this, tag));
+            InkEvent.observe(remove, 'click', Ink.bindEvent(this._removeTag, this, null));
             elm.appendChild(remove);
+
             this._tags.push(tag);
             this._viewElm.insertBefore(elm, this._input);
             this._tagsToMarkup(this._tags, this._element);
@@ -149,14 +151,22 @@ Ink.createModule("Ink.UI.TagField","1",["Ink.Dom.Element_1", "Ink.Dom.Event_1", 
                 this._input.value = '';
                 InkEvent.stop(event);
                 return false;
+            } else if (event.which === 8 && !this._input.value) { // backspace key // TODO TEST
+                this._removeTag(this._tags.length - 1);
             }
         },
 
-        _removeTag: function (event, tag) {
-            var elm = InkEvent.element(event).parentNode;
-            var i = InkElement.parentIndexOf(this._viewElm, elm);
-            this._tags = InkArray.remove(this._tags, i, 1);
-            InkElement.remove(elm);
+        _removeTag: function (event) {
+            var index;
+            if (typeof event === 'object') {  // click event on close button
+                var elm = InkEvent.element(event).parentNode;
+                index = InkElement.parentIndexOf(this._viewElm, elm);
+            } else if (typeof event === 'number') {  // manual removal
+                index = event;
+            }
+            this._tags = InkArray.remove(this._tags, index, 1);
+            InkElement.remove(this._viewElm.children[index]);
+            this._tagsToMarkup(this._tags, this._element);
         },
 
         _refocus: function (event) {
