@@ -1,0 +1,178 @@
+body {
+    background: #ededed;
+}
+header {
+    padding: 2em 0;
+    margin-bottom: 2em;
+}
+header h1 {
+    font-size: 2em;
+}
+header h1 small:before  {
+    content: "|";
+    margin: 0 0.5em;
+    font-size: 1.6em;
+}
+footer {
+    background: #ccc;
+    color: #0003;
+}
+footer p {
+    padding: 0.5em 1em 0.5em 0;
+    margin: 0;
+}
+
+
+
+.ink-galleryx {
+    position: relative;
+    overflow: hidden;
+
+    -webkit-touch-callout: none;
+      -webkit-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+              user-select: none;
+}
+
+.ink-galleryx .stage {
+    position: static;
+}
+
+.ink-galleryx .next,
+.ink-galleryx .prev {
+    color: #f2f2f2;
+    position: absolute;
+    top: 0;
+
+    filter: alpha(opacity=60);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+    opacity: 0.6;
+
+    text-decoration: none;
+    display: block;
+    height: 100%;
+    width: 50%;
+}
+
+.ink-galleryx .next:hover,
+.ink-galleryx .prev:hover {
+    filter: alpha(opacity=100);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+    opacity: 1;
+
+    -webkit-transition-property: "opacity";
+       -moz-transition-property: "opacity";
+        -ms-transition-property: "opacity";
+         -o-transition-property: "opacity";
+            transition-property: "opacity";
+
+    -webkit-transition-duration: 250ms;
+       -moz-transition-duration: 250ms;
+        -ms-transition-duration: 250ms;
+         -o-transition-duration: 250ms;
+            transition-duration: 250ms;
+}
+
+.ink-galleryx .prev {
+    left: 0;
+    padding-left: .6em;
+}
+
+.ink-galleryx .next {
+    right: 0;
+    padding-right: .6em;
+    text-align: right;
+}
+
+.ink-galleryx .thumb-holder {
+    overflow-x: hidden;
+    /*overflow-x: auto;*/
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    height: auto;
+    background-color: #000;
+    z-index: 1;
+}
+
+.ink-galleryx .thumb-holder:hover,
+.ink-galleryx .thumb-holder:focus {
+    overflow-x: auto;
+}
+
+.ink-galleryx .horizontal {
+    -webkit-transition-property: "margin-left";
+       -moz-transition-property: "margin-left";
+        -ms-transition-property: "margin-left";
+         -o-transition-property: "margin-left";
+            transition-property: "margin-left";
+
+    -webkit-transition-duration: 500ms;
+       -moz-transition-duration: 500ms;
+        -ms-transition-duration: 500ms;
+         -o-transition-duration: 500ms;
+            transition-duration: 500ms;
+}
+
+.ink-galleryx-fullscreen {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.ink-galleryx .caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #FFF;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #000;
+    padding: 0.5em 1em;
+    margin-top: -5em;
+}
+
+.ink-galleryx .pagination {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    text-align: center;
+    color: #FFF;
+    z-index: 1;
+}
+
+.ink-galleryx .pagination > * {
+    margin: 0 0.1em;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.ink-galleryx .pagination > .current {
+    opacity: 1;
+}
+
+.ink-galleryx .resize {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #FFF;
+}
+
+.ink-galleryx .item {
+    display: inline-block;
+    vertical-align: top;
+    text-decoration: none;
+    padding: 0.5em;
+}
+
+
+
+.ink-inset {
+    -webkit-box-shadow: inset 0 0 2em rgba(0, 0, 0, 0.5), inset 0 0 1em #000;
+       -moz-box-shadow: inset 0 0 2em rgba(0, 0, 0, 0.5), inset 0 0 1em #000;
+            box-shadow: inset 0 0 2em rgba(0, 0, 0, 0.5), inset 0 0 1em #000;
+}

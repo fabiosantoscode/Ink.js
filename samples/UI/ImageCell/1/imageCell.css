@@ -1,0 +1,19 @@
+/* to allow empty div.image-cells to remain aligned to the ones with img elements */
+* > .image-cell {
+    vertical-align: top;
+}
+
+.image-cell {
+    display:             inline-block;
+    overflow:            hidden;
+    background-color:    #000;
+    background-repeat:   no-repeat;
+    background-position: 50% 50%;
+}
+
+.image-cell > img {
+    width:      auto;
+    height:     auto;
+    max-width:  none;
+    max-height: none;
+}
