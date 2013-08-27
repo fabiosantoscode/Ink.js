@@ -127,20 +127,20 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
             if( InkElement.hasAttribute(this._rootElement,'style') ){
                 if( scrollHeight <= (this._options.originalTop-this._options.originalOffsetTop)){
                     this._rootElement.removeAttribute('style');
-                } else if( ((document.body.scrollHeight-(scrollHeight+parseInt(this._dims.height,10))) < this._options.offsetBottom) ){
+                } else if( ((document.body.scrollHeight-(scrollHeight+parseInt(this._dims.height,10))) < this.offsetBottom) ){
 
                     this._rootElement.style.position = 'fixed';
                     this._rootElement.style.top = 'auto';
                     this._rootElement.style.left = this._options.originalLeft + 'px';
 
-                    if( this._options.offsetBottom < parseInt(document.body.scrollHeight - (document.documentElement.clientHeight+scrollHeight),10) ){
+                    if( this.offsetBottom < parseInt(document.body.scrollHeight - (document.documentElement.clientHeight+scrollHeight),10) ){
                         this._rootElement.style.bottom = this._options.originalOffsetBottom + 'px';
                     } else {
-                        this._rootElement.style.bottom = this._options.offsetBottom - parseInt(document.body.scrollHeight - (document.documentElement.clientHeight+scrollHeight),10) + 'px';
+                        this._rootElement.style.bottom = this.offsetBottom - parseInt(document.body.scrollHeight - (document.documentElement.clientHeight+scrollHeight),10) + 'px';
                     }
                     this._rootElement.style.width = this._options.originalWidth + 'px';
 
-                } else if( ((document.body.scrollHeight-(scrollHeight+parseInt(this._dims.height,10))) >= this._options.offsetBottom) ){
+                } else if( ((document.body.scrollHeight-(scrollHeight+parseInt(this._dims.height,10))) >= this.offsetBottom) ){
                     this._rootElement.style.left = this._options.originalLeft + 'px';
                     this._rootElement.style.position = 'fixed';
                     this._rootElement.style.bottom = 'auto';
@@ -177,9 +177,9 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
                     topElementTop = InkElement.elementTop( this._topElement )
                 ;
 
-                this._options.offsetTop = ( parseInt(topElementHeight,10) + parseInt(topElementTop,10) ) + parseInt(this._options.originalOffsetTop,10);
+                this.offsetTop = ( parseInt(topElementHeight,10) + parseInt(topElementTop,10) ) + parseInt(this._options.originalOffsetTop,10);
             } else {
-                this._options.offsetTop = parseInt(this._options.originalOffsetTop,10);
+                this.offsetTop = parseInt(this._options.originalOffsetTop,10);
             }
 
             /**
@@ -189,9 +189,9 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
                 var
                     bottomElementHeight = Element.elementHeight(this._bottomElement)
                 ;
-                this._options.offsetBottom = parseInt(bottomElementHeight,10) + parseInt(this._options.originalOffsetBottom,10);
+                this.offsetBottom = parseInt(bottomElementHeight,10) + parseInt(this._options.originalOffsetBottom,10);
             } else {
-                this._options.offsetBottom = parseInt(this._options.originalOffsetBottom,10);
+                this.offsetBottom = parseInt(this._options.originalOffsetBottom,10);
             }
         },
 
