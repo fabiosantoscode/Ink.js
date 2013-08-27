@@ -33,54 +33,7 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
      *      </script>
      */
     var Sticky = function( selector, options ){
-
-        if( typeof selector !== 'object' && typeof selector !== 'string'){
-            throw '[Sticky] :: Invalid selector defined';
-        }
-
-        if( typeof selector === 'object' ){
-            this._rootElement = selector;
-        } else {
-            this._rootElement = Selector.select( selector );
-            if( this._rootElement.length <= 0) {
-                throw "[Sticky] :: Can't find any element with the specified selector";
-            }
-            this._rootElement = this._rootElement[0];
-        }
-
-        /**
-         * Setting default options and - if needed - overriding it with the data attributes
-         */
-        this._options = Ink.extendObj({
-            offsetBottom: 0,
-            offsetTop: 0,
-            topElement: undefined,
-            bottomElement: undefined
-        }, InkElement.data( this._rootElement ) );
-
-        /**
-         * In case options have been defined when creating the instance, they've precedence
-         */
-        this._options = Ink.extendObj(this._options,options || {});
-
-        if( typeof( this._options.topElement ) !== 'undefined' ){
-            this._options.topElement = Aux.elOrSelector( this._options.topElement, 'Top Element');
-        } else {
-            this._options.topElement = Aux.elOrSelector( 'body', 'Top Element');
-        }
-
-        if( typeof( this._options.bottomElement ) !== 'undefined' ){
-            this._options.bottomElement = Aux.elOrSelector( this._options.bottomElement, 'Bottom Element');
-        } else {
-            this._options.bottomElement = Aux.elOrSelector( 'body', 'Top Element');
-        }
-
-        this._computedStyle = window.getComputedStyle ? window.getComputedStyle(this._rootElement, null) : this._rootElement.currentStyle;
-        this._dims = {
-            height: this._computedStyle.height,
-            width: this._computedStyle.width
-        };
-        this._init();
+        this._init(selector, options);
     };
 
     Sticky.prototype = {
@@ -91,25 +44,72 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
          * @method _init
          * @private
          */
-        _init: function(){
-            Event.observe( document, 'scroll', Ink.bindEvent(this._onScroll,this) );
-            Event.observe( window, 'resize', Ink.bindEvent(this._onResize,this) );
+        _init: function (selector, options) {
+            this._rootElement = Aux.elOrSelector(selector, 'Ink.UI.Sticky: root sticky element');
 
+            /**
+             * Setting default options and - if needed - overriding it with the data attributes and given options
+             */
+            var o = this._options = Ink.extendObj({
+                offsetBottom: 0,
+                offsetTop: 0,
+                topElement: null,
+                bottomElement: null 
+            }, options || {}, InkElement.data( this._rootElement ) );
+
+            this._topElement = Selector.select( o.topElement )[0];
+            this._bottomElement = Selector.select( o.bottomElement )[0];
+
+            this._computedStyle = window.getComputedStyle ?
+                window.getComputedStyle(this._rootElement, null) :
+                this._rootElement.currentStyle;
+
+            this._dims = {
+                height: this._computedStyle.height,
+                width: this._computedStyle.width
+            };  // TODO use this not, since change it might
+
+            Event.observe( document, 'scroll', Ink.bindEvent(this._onScrollFilter,this));
+            Event.observe( window, 'resize', Ink.bindEvent(this._onResizeFilter,this));
             this._calculateOriginalSizes();
-
             this._calculateOffsets();
-
+            this._onScroll();
         },
 
         /**
-         * Scroll handler.
+         * Scroll handler. Meant to execute `_onScroll` on the next tick, so as to avoid
+         * calculating events too many times.
          *
-         * @method _onScroll
+         * @method _onScrollFilter
          * @private
          */
+        _onScrollFilter: function(){
+            clearTimeout(this._scrollTimeout);
+            this._scrollTimeout = setTimeout(Ink.bind(this._onScroll,this), 0);
+        },
+
+        /**
+         * Resize handler
+         *
+         * @method _onResizeFilter
+         * @private
+         */
+        _onResizeFilter: function(){
+            clearTimeout(this._resizeTimeout);
+            this._resizeTimeout = setTimeout(Ink.bind(function(){
+                this._rootElement.removeAttribute('style');
+                this._calculateOriginalSizes();
+                this._calculateOffsets();
+                this._onScroll();
+            }, this),0);  // Avoid catering to several events on the same tick.
+        },
+
+        /**
+         * Place the element correctly on the page
+         * @method _onScroll
+         * @private
+         **/
         _onScroll: function(){
-
-
             var viewport = (document.compatMode === "CSS1Compat") ?  document.documentElement : document.body;
 
             if(
@@ -122,16 +122,6 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
                 return;
             }
 
-            clearTimeout(this._scrollTimeout);
-            this._scrollTimeout = setTimeout(Ink.bind(this._place,this), 0);
-        },
-
-        /**
-         * Place the element correctly on the page
-         * @method _place
-         * @private
-         **/
-        _place: function(){
             var scrollHeight = InkElement.scrollHeight();
 
             if( InkElement.hasAttribute(this._rootElement,'style') ){
@@ -169,24 +159,6 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
                 this._rootElement.style.top = this._options.originalOffsetTop + 'px';
                 this._rootElement.style.width = this._options.originalWidth + 'px';
             }
-
-            this._scrollTimeout = undefined;
-        },
-        /**
-         * Resize handler
-         *
-         * @method _onResize
-         * @private
-         */
-        _onResize: function(){
-
-            clearTimeout(this._resizeTimeout);
-            this._resizeTimeout = setTimeout(Ink.bind(function(){
-                this._rootElement.removeAttribute('style');
-                this._calculateOriginalSizes();
-                this._calculateOffsets();
-            }, this),0);  // Avoid catering to several events on the same tick.
-
         },
 
         /**
@@ -197,42 +169,30 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
          * @private
          */
         _calculateOffsets: function(){
-
             /**
              * Calculating the offset top
              */
-            if( typeof this._options.topElement !== 'undefined' ){
+            if( this._topElement ){
+                var topElementHeight = InkElement.elementHeight( this._topElement ),
+                    topElementTop = InkElement.elementTop( this._topElement )
+                ;
 
-
-                if( this._options.topElement.nodeName.toLowerCase() !== 'body' ){
-                    var
-                        topElementHeight = InkElement.elementHeight( this._options.topElement ),
-                        topElementTop = InkElement.elementTop( this._options.topElement )
-                    ;
-
-                    this._options.offsetTop = ( parseInt(topElementHeight,10) + parseInt(topElementTop,10) ) + parseInt(this._options.originalOffsetTop,10);
-                } else {
-                    this._options.offsetTop = parseInt(this._options.originalOffsetTop,10);
-                }
+                this._options.offsetTop = ( parseInt(topElementHeight,10) + parseInt(topElementTop,10) ) + parseInt(this._options.originalOffsetTop,10);
+            } else {
+                this._options.offsetTop = parseInt(this._options.originalOffsetTop,10);
             }
 
             /**
              * Calculating the offset bottom
              */
-            if( typeof this._options.bottomElement !== 'undefined' ){
-
-                if( this._options.bottomElement.nodeName.toLowerCase() !== 'body' ){
-                    var
-                        bottomElementHeight = Element.elementHeight(this._options.bottomElement)
-                    ;
-                    this._options.offsetBottom = parseInt(bottomElementHeight,10) + parseInt(this._options.originalOffsetBottom,10);
-                } else {
-                    this._options.offsetBottom = parseInt(this._options.originalOffsetBottom,10);
-                }
+            if( this._bottomElement ){
+                var
+                    bottomElementHeight = Element.elementHeight(this._bottomElement)
+                ;
+                this._options.offsetBottom = parseInt(bottomElementHeight,10) + parseInt(this._options.originalOffsetBottom,10);
+            } else {
+                this._options.offsetBottom = parseInt(this._options.originalOffsetBottom,10);
             }
-
-            this._onScroll();
-
         },
 
         /**
@@ -255,7 +215,6 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
             }
             this._options.originalWidth = parseInt(this._computedStyle.width,10);
         }
-
     };
 
     return Sticky;
