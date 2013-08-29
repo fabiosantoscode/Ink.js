@@ -19,7 +19,7 @@
 
     // internal data
 
-    /**
+    /*
      * NOTE:
      * invoke Ink.setPath('Ink', '/Ink/'); before requiring local modules
      */
@@ -318,6 +318,7 @@
 
         /**
          * returns the markup you should have to bundle your JS resources yourself
+         *
          * @return {String} scripts markup
          */
         getModuleScripts: function() {
@@ -337,12 +338,12 @@
         },
 
         /**
-         * Function.prototype.bind alternative
+         * Function.prototype.bind alternative.
+         * Additional arguments will be sent to the original function as prefix arguments.
          *
          * @function bind
          * @param {Function}  fn
          * @param {Object}    context
-         * @param {any}       args*
          * @return {Function}
          */
         bind: function(fn, context) {
@@ -355,13 +356,13 @@
         },
 
         /**
-         * Function.prototype.bind alternative
-         * same as bind but keeps first argument of the call the original event
+         * Function.prototype.bind alternative for event handlers.
+         * Same as bind but keeps first argument of the call the original event.
+         * Additional arguments will be sent to the original function as prefix arguments.
          *
          * @function bindEvent
          * @param {Function}  fn
          * @param {Object}    context
-         * @param {any}       args*
          * @return {Function}
          */
         bindEvent: function(fn, context) {
@@ -459,24 +460,6 @@
             }
             return destination;
         }
-
-        /**
-         * TODO EH?!
-         */
-        /*
-        Browser: {
-            IE: true,
-            GECKO: true,
-            SAFARI: true,
-            OPERA: false,
-            CHROME: true,
-            KONQUEROR: true,
-            model: '',
-            version: '',
-            userAgent: ''
-        }
-        */
-
 
     };
 

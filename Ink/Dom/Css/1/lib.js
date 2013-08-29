@@ -95,10 +95,10 @@ Ink.createModule( 'Ink.Dom.Css', 1, [], function() {
         },
 
         /**
-         * @function {Boolean} hasClassName
+         * @function hasClassName
          * @param {DOMElement|String}  elm        DOM element or element id
          * @param {String}             className
-         * @return true if a given class is applied to a given element
+         * @return {Boolean} true if a given class is applied to a given element
          */
         hasClassName: function(elm, className) {
             elm = Ink.i(elm);
@@ -574,8 +574,8 @@ Ink.createModule( 'Ink.Dom.Css', 1, [], function() {
          * Converts decimal to hexadecimal values, for use with colors
          *
          * @function decToHex
-         * @param {String} dec - Either a single decimal value , an rgb(r, g, b) string
-         * or an Object with r, g and b properties
+         * @param {String} dec Either a single decimal value,
+         * an rgb(r, g, b) string or an Object with r, g and b properties
          * @return Hexadecimal value
          */
         decToHex: function(dec) {

@@ -354,7 +354,7 @@ Ink.createModule('Ink.Util.Validator', '1', [], function() {
          * @example
          *     Ink.requireModules(['Ink.Util.Validator_1'], function( InkValidator ){
          *         console.log( InkValidator.mail( 'agfsdfgfdsgdsf' ) ); // Result: false
-         *         console.log( InkValidator.mail( 'inkdev@sapo.pt' ) ); // Result: true
+         *         console.log( InkValidator.mail( 'inkdev\u0040sapo.pt' ) ); // Result: true (where \u0040 is at sign)
          *     });
          */
         mail: function(email)

@@ -135,6 +135,7 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
                     if( scrollHeight <= this._options.offsetTop){
                         this._rootElement.removeAttribute('style');
                     } else if( ((document.body.scrollHeight-(scrollHeight+parseInt(this._dims.height,10))) < this._options.offsetBottom) ){
+                        this._rootElement.style.left = this._options.originalLeft + 'px'; 
                         this._rootElement.style.position = 'fixed';
                         this._rootElement.style.top = 'auto';
                         if( this._options.offsetBottom < parseInt(document.body.scrollHeight - (document.documentElement.clientHeight+scrollHeight),10) ){
@@ -146,6 +147,7 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
                     } else if( ((document.body.scrollHeight-(scrollHeight+parseInt(this._dims.height,10))) >= this._options.offsetBottom) ){
                         this._rootElement.style.position = 'fixed';
                         this._rootElement.style.bottom = 'auto';
+                        this._rootElement.style.left = this._options.originalLeft + 'px'; 
                         this._rootElement.style.top = this._options.originalOffsetTop + 'px';
                         this._rootElement.style.width = this._options.originalWidth + 'px';
                     }
@@ -156,7 +158,8 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
 
                     this._rootElement.style.position = 'fixed';
                     this._rootElement.style.bottom = 'auto';
-                    this._rootElement.style.top = this._options.offsetTop + 'px';
+                    this._rootElement.style.left = this._options.originalLeft + 'px'; 
+                    this._rootElement.style.top = this._options.originalOffsetTop + 'px';
                     this._rootElement.style.width = this._options.originalWidth + 'px';
                 }
 
@@ -241,6 +244,7 @@ Ink.createModule('Ink.UI.Sticky', '1', ['Ink.UI.Aux_1','Ink.Dom.Event_1','Ink.Do
             this._options.originalOffsetTop = parseInt(this._options.offsetTop,10);
             this._options.originalOffsetBottom = parseInt(this._options.offsetBottom,10);
             this._options.originalTop = parseInt(this._rootElement.offsetTop,10);
+            this._options.originalLeft = parseInt(this._rootElement.offsetLeft,10);
             if(isNaN(this._options.originalWidth = parseInt(this._dims.width,10))) {
                 this._options.originalWidth = 0;
             }

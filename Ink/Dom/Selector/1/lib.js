@@ -180,7 +180,7 @@ try {
 	};
 }
 
-/**
+/*
  * For feature detection
  * @param {Function} fn The function to test for native support
  */
@@ -188,7 +188,7 @@ function isNative( fn ) {
 	return rnative.test( fn + "" );
 }
 
-/**
+/*
  * Create key-value caches of limited size
  * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
  *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
@@ -208,7 +208,7 @@ function createCache() {
 	});
 }
 
-/**
+/*
  * Mark a function for special use by Sizzle
  * @param {Function} fn The function to mark
  */
@@ -217,7 +217,7 @@ function markFunction( fn ) {
 	return fn;
 }
 
-/**
+/*
  * Support testing using an element
  * @param {Function} fn Passed the created div and expects a boolean result
  */
@@ -344,7 +344,7 @@ function Sizzle( selector, context, results, seed ) {
 	return select( selector.replace( rtrim, "$1" ), context, results, seed );
 }
 
-/**
+/*
  * Detect xml
  * @param {Element|Object} elem An element or a document
  */
@@ -355,7 +355,7 @@ isXML = Sizzle.isXML = function( elem ) {
 	return documentElement ? documentElement.nodeName !== "HTML" : false;
 };
 
-/**
+/*
  * Sets document-related variables once based on the current document
  * @param {Element|Object} [doc] An element or document object to use to set the document
  * @returns {Object} Returns the current document
@@ -812,7 +812,7 @@ Sizzle.uniqueSort = function( results ) {
 	return results;
 };
 
-/**
+/*
  * Checks document order of two siblings
  * @param {Element} a
  * @param {Element} b
@@ -874,7 +874,7 @@ function createPositionalPseudo( fn ) {
 	});
 }
 
-/**
+/*
  * Utility function for retrieving the text value of an array of DOM nodes
  * @param {Array|Element} elem
  */
